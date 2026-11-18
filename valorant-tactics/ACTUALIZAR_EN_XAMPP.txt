@@ -1,0 +1,26 @@
+VALORANT TACTICS v2 - ACTUALIZACIÓN DE LA VERSIÓN YA INSTALADA
+
+NO vuelvas a importar database.sql: ELIMINARÍA TUS DATOS.
+
+1) Haz una copia de la base de datos desde phpMyAdmin:
+   Base de datos valorant_tactics > Exportar > Rápido > SQL > Exportar.
+   Guarda el archivo resultante en un lugar seguro.
+
+2) Actualiza tu base SIN BORRAR PARTIDAS:
+   En phpMyAdmin selecciona valorant_tactics > Importar.
+   Selecciona SOLO migracion_v2.sql y pulsa Importar/Continuar.
+   Ejecuta esta migración UNA SOLA VEZ sobre el esquema antiguo.
+
+3) Copia esta nueva carpeta valorant-tactics a C:\xampp\htdocs\.
+   Antes, cambia el nombre de la carpeta antigua a valorant-tactics-respaldo.
+   Copia la nueva carpeta completa; no mezcles archivos de dos versiones.
+
+4) Abre http://localhost/valorant-tactics/ e inicia sesión como Coach.
+   Verifica: Mapas (13, 7 activos), Plantilla (estado y rol), Scrims,
+   Dashboard. Si quieres, importa verificar_v2.sql como consultas de
+   solo lectura o ejecútalo desde la pestaña SQL.
+
+5) Cuando hayas verificado todo, podrás borrar valorant-tactics-respaldo.
+
+IMPORTANTE: `database.sql` es para instalaciones NUEVAS y recrea tablas.
+Los datos demo NO deben utilizarse como cuentas reales en un hosting público.

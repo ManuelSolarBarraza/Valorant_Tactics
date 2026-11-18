@@ -1,0 +1,7 @@
+<?php
+final class TacticaController {
+ public static function index():void {requireLogin();$map=positiveInt($_GET['map']??0);$maps=ScrimModel::maps();$items=EstrategiaModel::all($map?:null);render('tacticas/listar',compact('map','maps','items'));}
+ public static function edit():void {requireCoach();$id=(int)($_GET['id']??0);$item=$id?EstrategiaModel::find($id):null;if($id&&!$item)throw new RuntimeException('Ficha no encontrada.');$maps=ScrimModel::maps();render('tacticas/crear',compact('item','maps'));}
+ public static function save():never {requireCoach();verifyCsrf();$id=(int)($_POST['id']??0);$title=clean('titulo',150);$map=positiveInt($_POST['id_mapa']??0);$side=clean('bando',20);$agent=clean('agente_clave',50);$desc=clean('descripcion',12000);$vod=clean('link_vod',255);if(!$title||!$agent||!$desc||!in_array($side,['Atacante','Defensor'],true)||!validVod($vod)||!in_array($map,array_map('intval',array_column(ScrimModel::maps(),'id_mapa')),true))throw new RuntimeException('Ficha inválida: completa los campos y usa enlaces HTTPS de YouTube o Twitch.');if($id&&!EstrategiaModel::find($id))throw new RuntimeException('Ficha no encontrada.');$data=[$title,$map,$side,$agent,$desc,$vod?:null];if(!$id)$data[]=(int)user()['id_usuario'];EstrategiaModel::save($id?:null,$data);flash($id?'Ficha actualizada.':'Ficha creada.');redirect('tacticas');}
+ public static function delete():never {requireCoach();verifyCsrf();EstrategiaModel::remove((int)($_POST['id']??0));flash('Ficha eliminada.');redirect('tacticas');}
+}

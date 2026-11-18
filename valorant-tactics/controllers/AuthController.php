@@ -1,0 +1,6 @@
+<?php
+final class AuthController {
+ public static function login():void {if(user())redirect();if($_SERVER['REQUEST_METHOD']==='POST') {verifyCsrf();$u=UsuarioModel::byEmail(clean('email',100));if($u && password_verify((string)($_POST['password']??''),$u['password_hash'])){session_regenerate_id(true);unset($u['password_hash']);$_SESSION['user']=$u;flash('Bienvenido, '.$u['nickname_valorant']);redirect();}flash('Credenciales incorrectas.','error');redirect('login');}render('auth/login');}
+ public static function register():void {if($_SERVER['REQUEST_METHOD']==='POST'){verifyCsrf();$n=clean('nombre_completo',100);$nick=clean('nickname_valorant',50);$email=clean('email',100);$pass=(string)($_POST['password']??'');if(!$n||!$nick||!filter_var($email,FILTER_VALIDATE_EMAIL)||strlen($pass)<8)throw new RuntimeException('Completa los campos. La contraseña debe tener al menos 8 caracteres.');try{UsuarioModel::register($n,$nick,$email,$pass);}catch(PDOException $e){if($e->getCode()==='23000')throw new RuntimeException('El correo ya está registrado.');throw $e;}flash('Cuenta creada como Tryout. Ya puedes iniciar sesión.');redirect('login');}render('auth/registro');}
+ public static function logout():never {if($_SERVER['REQUEST_METHOD']!=='POST') redirect();verifyCsrf();$_SESSION=[];session_regenerate_id(true);redirect('login');}
+}
